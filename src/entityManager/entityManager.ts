@@ -1,14 +1,14 @@
-import { v4 } from "uuid";
-import Component from "./component";
-import { TypeTagToComponent } from "./typeTagToComponent";
+import { v4 } from 'uuid';
+import Component from './component';
+import { TypeTagToComponent } from './typeTagToComponent';
 
 type ComponentMap = {
-  [K in keyof TypeTagToComponent]?: Component<K>;
+  [K in keyof TypeTagToComponent]?: TypeTagToComponent[K];
 };
 
-type GuaranteedComponentMap<
-  GuaranteedTypeTag extends keyof TypeTagToComponent
-> = Required<Pick<ComponentMap, GuaranteedTypeTag>> &
+type GuaranteedComponentMap<GuaranteedTypeTag extends keyof TypeTagToComponent> = Required<
+  Pick<ComponentMap, GuaranteedTypeTag>
+> &
   Omit<ComponentMap, GuaranteedTypeTag>;
 
 export default class EntityManager {
@@ -19,6 +19,7 @@ export default class EntityManager {
     const componentMap: ComponentMap = {};
 
     for (const component of components) {
+      component.entityId = id;
       componentMap[component.typeTag] = component as any;
     }
     this.entities.set(id, componentMap);
@@ -26,21 +27,21 @@ export default class EntityManager {
     return id;
   }
 
+  getEntity(id: string): ComponentMap | undefined {
+    return this.entities.get(id);
+  }
+
   entitiesWithComponent<TypeTag extends keyof TypeTagToComponent>(
     ...typeTag: TypeTag[]
-  ): ReadonlyArray<GuaranteedComponentMap<TypeTag>> {
-    const entities: GuaranteedComponentMap<TypeTag>[] = [];
+  ): ReadonlyArray<[id: string, components: GuaranteedComponentMap<TypeTag>]> {
+    const entities: [id: string, components: GuaranteedComponentMap<TypeTag>][] = [];
 
     for (const [id, components] of this.entities) {
       if (typeTag.every((t) => components[t] !== undefined)) {
-        entities.push(components as GuaranteedComponentMap<TypeTag>);
+        entities.push([id, components as GuaranteedComponentMap<TypeTag>]);
       }
     }
 
     return entities;
-  }
-
-  toString(): string {
-    return JSON.stringify(this.entities, null, 2);
   }
 }
