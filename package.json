@@ -1,0 +1,19 @@
+{
+  "name": "supply-graph",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Manuel Alabor <manuel@alabor.me>",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.21",
+    "uuid": "^8.3.2"
+  }
+}
