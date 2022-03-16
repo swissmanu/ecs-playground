@@ -1,11 +1,9 @@
-import Component from "../entityManager/component";
+import Component from '../entityManager/component';
 
-export default class ProducerComponent extends Component<
-  typeof ProducerComponent.TypeTag
-> {
-  static TypeTag = "Producer" as const;
+export default class ProducerComponent extends Component<typeof ProducerComponent.TypeTag> {
+  static TypeTag = 'Producer' as const;
 
-  constructor() {
+  constructor(readonly productivity = 1, public progress = 0) {
     super(ProducerComponent.TypeTag);
   }
 }
