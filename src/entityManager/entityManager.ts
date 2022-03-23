@@ -31,6 +31,10 @@ export default class EntityManager {
     return this.entities.get(id);
   }
 
+  allEntities(): ReadonlyMap<string, ComponentMap> {
+    return this.entities;
+  }
+
   entitiesWithComponent<TypeTag extends keyof TypeTagToComponent>(
     ...typeTag: TypeTag[]
   ): ReadonlyArray<[id: string, components: GuaranteedComponentMap<TypeTag>]> {

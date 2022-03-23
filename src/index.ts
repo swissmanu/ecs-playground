@@ -1,4 +1,3 @@
-import { inspect } from 'util';
 import ConsumerComponent from './components/consumer';
 import GraphNodeComponent from './components/graphNode';
 import ProducerComponent from './components/producer';
@@ -23,5 +22,6 @@ const systems: ReadonlyArray<System> = [new LogisticsSystem(entityManager), new 
 setInterval(() => {
   console.log('Update...');
   systems.forEach((s) => s.update());
-  console.log(inspect(entityManager, false, 3));
+  const allEntities = entityManager.allEntities();
+  console.log(allEntities);
 }, 1000);
