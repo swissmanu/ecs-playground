@@ -19,9 +19,7 @@ entityManager.addEntity(nodeC, new StoreComponent());
 
 const systems: ReadonlyArray<System> = [new LogisticsSystem(entityManager), new ProductionSystem(entityManager)];
 
-setInterval(() => {
-  console.log('Update...');
-  systems.forEach((s) => s.update());
-  const allEntities = entityManager.allEntities();
-  console.log(allEntities);
-}, 1000);
+export default {
+  entityManager,
+  systems,
+};
