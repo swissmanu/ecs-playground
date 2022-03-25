@@ -2,11 +2,11 @@ import { v4 } from 'uuid';
 import Component from './component';
 import { TypeTagToComponent } from './typeTagToComponent';
 
-type ComponentMap = {
+export type ComponentMap = {
   [K in keyof TypeTagToComponent]?: TypeTagToComponent[K];
 };
 
-type GuaranteedComponentMap<GuaranteedTypeTag extends keyof TypeTagToComponent> = Required<
+export type GuaranteedComponentMap<GuaranteedTypeTag extends keyof TypeTagToComponent> = Required<
   Pick<ComponentMap, GuaranteedTypeTag>
 > &
   Omit<ComponentMap, GuaranteedTypeTag>;
