@@ -35,7 +35,7 @@ export default class EntityManager {
     return this.entities;
   }
 
-  entitiesWithComponent<TypeTag extends keyof TypeTagToComponent>(
+  getEntitiesWithComponent<TypeTag extends keyof TypeTagToComponent>(
     ...typeTag: TypeTag[]
   ): ReadonlyArray<[id: string, components: GuaranteedComponentMap<TypeTag>]> {
     const entities: [id: string, components: GuaranteedComponentMap<TypeTag>][] = [];
@@ -47,5 +47,20 @@ export default class EntityManager {
     }
 
     return entities;
+  }
+
+  getEntityWithComponents<TypeTag extends keyof TypeTagToComponent>(
+    id: string,
+    ...typeTag: TypeTag[]
+  ): GuaranteedComponentMap<TypeTag> | null {
+    const components = this.entities.get(id);
+
+    if (components) {
+      if (typeTag.every((t) => components[t] !== undefined)) {
+        return components as GuaranteedComponentMap<TypeTag>;
+      }
+    }
+
+    return null;
   }
 }

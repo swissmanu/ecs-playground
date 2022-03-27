@@ -12,17 +12,17 @@ interface ReactRenderingProps {
 const CELL_SIZE = 50;
 
 const ReactRenderer: React.FC<ReactRenderingProps> = ({ entityManager }) => {
-  const positions = React.useMemo(() => entityManager.entitiesWithComponent('Position'), []);
+  const positions = React.useMemo(() => entityManager.getEntitiesWithComponent('Position'), []);
   const graphEdges = React.useMemo(
     () =>
       entityManager
-        .entitiesWithComponent('GraphNode', 'Position')
+        .getEntitiesWithComponent('GraphNode', 'Position')
         .reduce<ReadonlyArray<Edge>>((edges, [, fromComponents]) => {
           return [
             ...edges,
             ...fromComponents.GraphNode.neighbors.reduce<ReadonlyArray<Edge>>((acc, toGraphNode) => {
-              const to = entityManager.getEntity(toGraphNode.entityId);
-              if (to && to.Position) {
+              const to = entityManager.getEntityWithComponents(toGraphNode.entityId, 'Position');
+              if (to) {
                 return [...acc, [fromComponents, to as GuaranteedComponentMap<'Position' | 'GraphNode'>]];
               }
               return acc;
