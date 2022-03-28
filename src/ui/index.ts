@@ -1,3 +1,4 @@
+import WalkerComponent from '../simulation/components/walker';
 import GraphNodeComponent from '../simulation/components/graphNode';
 import PositionComponent from '../simulation/components/position';
 import ProducerComponent from '../simulation/components/producer';
@@ -44,9 +45,27 @@ function createSimulation() {
    └──────┴──────┴──────┴──────┴──────┴──────┴──────┘
 */
 
-  entityManager.addEntity(nodeA, new ProducerComponent(0.5), new StoreComponent(), new PositionComponent(1, 1));
-  entityManager.addEntity(nodeB, new StoreComponent(), new PositionComponent(1, 3));
-  entityManager.addEntity(nodeC, new StoreComponent(), new PositionComponent(5, 4));
+  const entityA = entityManager.addEntity(
+    nodeA,
+    new ProducerComponent(0.5),
+    new StoreComponent(),
+    new PositionComponent(1, 1)
+  );
+  const entityB = entityManager.addEntity(nodeB, new StoreComponent(), new PositionComponent(1, 3));
+  const entityC = entityManager.addEntity(nodeC, new StoreComponent(), new PositionComponent(5, 4));
+
+  entityManager.addEntity(
+    new WalkerComponent({
+      type: 'Moving',
+      path: [
+        entityManager.getEntityWithComponents(entityC, 'Position', 'GraphNode')!,
+        entityManager.getEntityWithComponents(entityB, 'Position', 'GraphNode')!,
+        entityManager.getEntityWithComponents(entityA, 'Position', 'GraphNode')!,
+      ],
+      currentPathSegment: 0,
+      segmentProgress: 0,
+    })
+  );
 
   const systems: ReadonlyArray<System> = [new LogisticsSystem(entityManager), new ProductionSystem(entityManager)];
 
@@ -60,10 +79,12 @@ const ui = document.querySelector('#ui');
 
 if (ui) {
   const { entityManager, systems: simulationSystems } = createSimulation();
-  const systems = [...simulationSystems, new ReactRenderingSystem(entityManager, ui)];
+  const reactRendering = new ReactRenderingSystem(entityManager, ui);
+  const systems = [...simulationSystems, reactRendering];
 
+  reactRendering.update();
   setInterval(() => {
     console.log('Update...');
     systems.forEach((s) => s.update());
-  }, 1000);
+  }, 750);
 }

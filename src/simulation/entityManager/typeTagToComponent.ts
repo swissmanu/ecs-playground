@@ -1,3 +1,4 @@
+import WalkerComponent from '../components/walker';
 import ConsumerComponent from '../components/consumer';
 import GraphNodeComponent from '../components/graphNode';
 import PositionComponent from '../components/position';
@@ -10,4 +11,5 @@ export type TypeTagToComponent = {
   [ConsumerComponent.TypeTag]: ConsumerComponent;
   [StoreComponent.TypeTag]: StoreComponent;
   [PositionComponent.TypeTag]: PositionComponent;
+  [WalkerComponent.TypeTag]: WalkerComponent;
 };

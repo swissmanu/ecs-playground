@@ -3,24 +3,26 @@ import System from '../system';
 
 export default class LogisticsSystem extends System {
   update(): void {
-    for (const [id, components] of this.entityManager.getEntitiesWithComponent('Store', 'GraphNode')) {
-      if (components.Store.storedItems > 0) {
-        const neighborStores = components.GraphNode.neighbors.reduce<ReadonlyArray<StoreComponent>>(
-          (acc, { entityId }) => {
-            const neighbor = this.entityManager.getEntityWithComponents(entityId, 'Store');
-            if (neighbor) {
-              return [...acc, neighbor.Store!];
-            }
-            return acc;
-          },
-          []
-        );
-
-        if (neighborStores.length > 0) {
-          const [first] = neighborStores;
-          first.storedItems++;
-          components.Store.storedItems--;
+    for (const [id, components] of this.entityManager.getEntitiesWithComponent('Walker')) {
+      if (components.Walker.state.type === 'Moving') {
+        if (components.Walker.state.segmentProgress < 1) {
+          components.Walker.state.segmentProgress = Math.min(
+            1,
+            components.Walker.state.segmentProgress + components.Walker.velocity
+          );
+        } else if (components.Walker.state.segmentProgress >= 1) {
+          if (components.Walker.state.currentPathSegment === components.Walker.state.path.length - 2) {
+            components.Walker.state = {
+              type: 'Arrived',
+              location: components.Walker.state.path[components.Walker.state.path.length - 1],
+            };
+          } else {
+            components.Walker.state.segmentProgress = 0;
+            components.Walker.state.currentPathSegment++;
+          }
         }
+      } else if (components.Walker.state.type === 'Arrived') {
+        components.Walker.state = { type: 'Idle', location: components.Walker.state.location };
       }
     }
   }

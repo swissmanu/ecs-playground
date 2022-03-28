@@ -10,7 +10,7 @@ interface EntityProps {
 const Entity: React.FC<EntityProps> = ({ id, cellSize }) => {
   return (
     <g transform="scale(0.9,0.9) translate(3,3)">
-      <rect width={cellSize} height={cellSize} fill="green" />
+      <rect width={cellSize} height={cellSize} fill="brown" />
       <text>{id}</text>
     </g>
   );
