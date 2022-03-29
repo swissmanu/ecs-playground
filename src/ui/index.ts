@@ -8,6 +8,7 @@ import System from '../simulation/system';
 import LogisticsSystem from '../simulation/systems/logistics';
 import ProductionSystem from '../simulation/systems/production';
 import ReactRenderingSystem from './systems/reactRendering';
+import explore from '../algorithm/graph/explore';
 
 function createSimulation() {
   const entityManager = new EntityManager();

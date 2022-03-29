@@ -1,9 +1,8 @@
-import EntityManager from '../../../simulation/entityManager';
 import React from 'react';
-import Grid from './Grid';
+import EntityManager from '../../../simulation/entityManager';
 import Entity from './Entity';
-import Graph, { Edge } from './Graph';
-import { GuaranteedComponentMap } from '../../../simulation/entityManager/entityManager';
+import Graph from './Graph';
+import Grid from './Grid';
 import Walker from './Walker';
 
 interface ReactRenderingProps {
@@ -13,32 +12,13 @@ interface ReactRenderingProps {
 const CELL_SIZE = 50;
 
 const ReactRenderer: React.FC<ReactRenderingProps> = ({ entityManager }) => {
-  const positions = React.useMemo(() => entityManager.getEntitiesWithComponent('Position'), []);
-  const graphEdges = React.useMemo(
-    () =>
-      entityManager
-        .getEntitiesWithComponent('GraphNode', 'Position')
-        .reduce<ReadonlyArray<Edge>>((edges, [, fromComponents]) => {
-          return [
-            ...edges,
-            ...fromComponents.GraphNode.neighbors.reduce<ReadonlyArray<Edge>>((acc, toGraphNode) => {
-              const to = entityManager.getEntityWithComponents(toGraphNode.entityId, 'Position');
-              if (to) {
-                return [...acc, [fromComponents, to as GuaranteedComponentMap<'Position' | 'GraphNode'>]];
-              }
-              return acc;
-            }, []),
-          ];
-        }, []),
-    []
-  );
-
-  const walkers = React.useMemo(() => entityManager.getEntitiesWithComponent('Walker'), []);
+  const positions = React.useMemo(() => entityManager.getEntitiesWithComponent('Position'), [entityManager]);
+  const walkers = React.useMemo(() => entityManager.getEntitiesWithComponent('Walker'), [entityManager]);
 
   return (
     <div>
       <Grid numberOfCells={[10, 10]} cellSize={CELL_SIZE}>
-        <Graph edges={graphEdges} cellSize={CELL_SIZE} />
+        <Graph entityManager={entityManager} cellSize={CELL_SIZE} />
         {positions.map(([id, components]) => (
           <g
             key={id}
@@ -51,7 +31,6 @@ const ReactRenderer: React.FC<ReactRenderingProps> = ({ entityManager }) => {
           <Walker key={id} state={components.Walker.state} cellSize={CELL_SIZE} />
         ))}
       </Grid>
-      <pre>{JSON.stringify([...entityManager.allEntities().values()], null, 2)}</pre>
     </div>
   );
 };
