@@ -1,4 +1,3 @@
-import StoreComponent from '../components/store';
 import System from '../system';
 
 export default class LogisticsSystem extends System {

@@ -6,9 +6,12 @@
   "license": "MIT",
   "scripts": {
     "start": "browser-sync start --server build --files build",
-    "build": "esbuild src/ui/index.ts --bundle --outfile=build/js/index.js"
+    "build": "esbuild src/ui/index.ts --bundle --outfile=build/js/index.js",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/heap": "^0.2.29",
+    "@types/jest": "^27.4.1",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
@@ -17,7 +20,9 @@
     "eslint": "^8.12.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "jest": "^27.5.1",
     "prettier": "^2.6.0",
+    "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
   },
@@ -25,6 +30,7 @@
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.42",
     "@types/react-dom": "^17.0.14",
+    "heap": "^0.2.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "uuid": "^8.3.2"
