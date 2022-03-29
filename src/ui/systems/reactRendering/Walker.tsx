@@ -9,16 +9,35 @@ import subtract from '../../util/vector/subtract';
 interface WalkerProps {
   state: WalkerComponent['state'];
   cellSize: number;
+  onClick?: () => void;
 }
 
-const Walker: React.FC<WalkerProps> = ({ state, cellSize }) => {
+const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
+  const onClickCircle = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (onClick) {
+        e.preventDefault();
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
   switch (state.type) {
     case 'Idle':
       return (
         <g
           transform={`translate(${state.location.Position.left * cellSize}, ${state.location.Position.top * cellSize})`}
         >
-          <circle cx={cellSize / 2} cy={cellSize / 2} r={cellSize / 4} fill="teal" stroke="black" strokeWidth={4} />
+          <circle
+            cx={cellSize / 2}
+            cy={cellSize / 2}
+            r={cellSize / 4}
+            fill="teal"
+            stroke="black"
+            strokeWidth={4}
+            onClick={onClickCircle}
+          />
         </g>
       );
 
@@ -33,7 +52,15 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize }) => {
 
       return (
         <g transform={asSVGTranslate(absolute)}>
-          <circle cx={cellSize / 2} cy={cellSize / 2} r={cellSize / 4} fill="orange" stroke="black" strokeWidth={4} />
+          <circle
+            cx={cellSize / 2}
+            cy={cellSize / 2}
+            r={cellSize / 4}
+            fill="orange"
+            stroke="black"
+            strokeWidth={4}
+            onClick={onClickCircle}
+          />
         </g>
       );
     }
@@ -43,7 +70,15 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize }) => {
         <g
           transform={`translate(${state.location.Position.left * cellSize}, ${state.location.Position.top * cellSize})`}
         >
-          <circle cx={cellSize / 2} cy={cellSize / 2} r={cellSize / 4} fill="yellow" stroke="black" strokeWidth={4} />
+          <circle
+            cx={cellSize / 2}
+            cy={cellSize / 2}
+            r={cellSize / 4}
+            fill="yellow"
+            stroke="black"
+            strokeWidth={4}
+            onClick={onClickCircle}
+          />
         </g>
       );
   }

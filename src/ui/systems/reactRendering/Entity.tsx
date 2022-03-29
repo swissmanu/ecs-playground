@@ -5,12 +5,23 @@ interface EntityProps {
   id: string;
   components: ComponentMap;
   cellSize: number;
+  onClick?: () => void;
 }
 
-const Entity: React.FC<EntityProps> = ({ id, cellSize }) => {
+const Entity: React.FC<EntityProps> = ({ id, cellSize, onClick }) => {
+  const onClickRect = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (onClick) {
+        e.preventDefault();
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
   return (
     <g transform="scale(0.9,0.9) translate(3,3)">
-      <rect width={cellSize} height={cellSize} fill="brown" />
+      <rect width={cellSize} height={cellSize} fill="brown" onClick={onClickRect} />
       <text>{id}</text>
     </g>
   );
