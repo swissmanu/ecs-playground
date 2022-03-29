@@ -1,21 +1,20 @@
-import WalkerComponent from '../simulation/components/walker';
 import GraphNodeComponent from '../simulation/components/graphNode';
 import PositionComponent from '../simulation/components/position';
 import ProducerComponent from '../simulation/components/producer';
 import StoreComponent from '../simulation/components/store';
+import WalkerComponent from '../simulation/components/walker';
 import EntityManager from '../simulation/entityManager';
 import System from '../simulation/system';
 import LogisticsSystem from '../simulation/systems/logistics';
 import ProductionSystem from '../simulation/systems/production';
 import ReactRenderingSystem from './systems/reactRendering';
-import explore from '../algorithm/graph/explore';
 
 function createSimulation() {
   const entityManager = new EntityManager();
 
   const nodeC = new GraphNodeComponent();
-  const nodeB = new GraphNodeComponent([nodeC]);
-  const nodeA = new GraphNodeComponent([nodeB]);
+  const nodeB = new GraphNodeComponent([{ target: nodeC, data: 2 }]);
+  const nodeA = new GraphNodeComponent([{ target: nodeB, data: 1 }]);
 
   /*
        0     1      2      3       4      5     6

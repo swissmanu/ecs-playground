@@ -15,7 +15,7 @@ export default function explore(start: GraphNodeComponent): {
   while ((from = work.pop()) !== undefined) {
     nodes.add(from);
 
-    for (const to of from.neighbors) {
+    for (const { target: to } of from.edges) {
       if (!nodes.has(to)) {
         edges.push([from, to]);
         work.push(to);
