@@ -51,7 +51,7 @@ function createSimulation() {
     new StoreComponent(),
     new PositionComponent(1, 1)
   );
-  const entityB = entityManager.addEntity(nodeB, new StoreComponent(), new PositionComponent(1, 3));
+  const entityB = entityManager.addEntity(nodeB, new PositionComponent(1, 3));
   const entityC = entityManager.addEntity(nodeC, new StoreComponent(), new PositionComponent(5, 4));
 
   entityManager.addEntity(
