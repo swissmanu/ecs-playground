@@ -1,5 +1,6 @@
 import React from 'react';
 import WalkerComponent from '../../../simulation/components/walker';
+import EntityManager from '../../../simulation/entityManager';
 import add from '../../util/vector/add';
 import asSVGTranslate from '../../util/vector/asSVGTranslate';
 import multiplyWithScalar from '../../util/vector/multiplyWithScalar';
@@ -9,10 +10,11 @@ import subtract from '../../util/vector/subtract';
 interface WalkerProps {
   state: WalkerComponent['state'];
   cellSize: number;
+  entityManager: EntityManager;
   onClick?: () => void;
 }
 
-const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
+const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick, entityManager }) => {
   const onClickCircle = React.useCallback(
     (e: React.MouseEvent) => {
       if (onClick) {
@@ -24,11 +26,14 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
   );
 
   switch (state.type) {
-    case 'Idle':
+    case 'Idle': {
+      const position = entityManager.getEntityWithComponents(state.location.entityId, 'Position');
+      if (!position) {
+        return null;
+      }
+
       return (
-        <g
-          transform={`translate(${state.location.Position.left * cellSize}, ${state.location.Position.top * cellSize})`}
-        >
+        <g transform={`translate(${position.Position.left * cellSize}, ${position.Position.top * cellSize})`}>
           <circle
             cx={cellSize / 2}
             cy={cellSize / 2}
@@ -40,10 +45,21 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
           />
         </g>
       );
+    }
 
     case 'Moving': {
-      const segmentStart = state.path[state.currentPathSegment];
-      const segmentEnd = state.path[state.currentPathSegment + 1];
+      const segmentStart = entityManager.getEntityWithComponents(
+        state.path[state.currentPathSegment].entityId,
+        'Position'
+      );
+      const segmentEnd = entityManager.getEntityWithComponents(
+        state.path[state.currentPathSegment + 1].entityId,
+        'Position'
+      );
+
+      if (!segmentStart || !segmentEnd) {
+        return null;
+      }
 
       const origin = positionAsVector(segmentStart.Position);
       const direction = subtract(positionAsVector(segmentEnd.Position), origin);
@@ -65,11 +81,14 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
       );
     }
 
-    case 'Arrived':
+    case 'Arrived': {
+      const position = entityManager.getEntityWithComponents(state.location.entityId, 'Position');
+      if (!position) {
+        return null;
+      }
+
       return (
-        <g
-          transform={`translate(${state.location.Position.left * cellSize}, ${state.location.Position.top * cellSize})`}
-        >
+        <g transform={`translate(${position.Position.left * cellSize}, ${position.Position.top * cellSize})`}>
           <circle
             cx={cellSize / 2}
             cy={cellSize / 2}
@@ -81,6 +100,7 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick }) => {
           />
         </g>
       );
+    }
   }
 };
 export default Walker;

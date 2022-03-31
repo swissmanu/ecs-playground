@@ -1,4 +1,5 @@
 import findPath from '../algorithm/graph/astar';
+import ConsumerComponent from '../simulation/components/consumer';
 import GraphNodeComponent from '../simulation/components/graphNode';
 import PositionComponent from '../simulation/components/position';
 import ProducerComponent from '../simulation/components/producer';
@@ -17,26 +18,12 @@ function createSimulation() {
   const nodeC = new GraphNodeComponent();
   const nodeB = new GraphNodeComponent([
     { target: nodeC, data: 2 },
-    { target: nodeD, data: 5 },
-  ]);
-  const nodeA = new GraphNodeComponent([
-    { target: nodeB, data: 1 },
     { target: nodeD, data: 1 },
   ]);
-
-  // TODO Why does this not work?
-  // Should be: C, B, A, D
-  // Should not be: C, B, D
-  console.log(
-    findPath(
-      nodeC,
-      nodeD,
-      ({ edges }) => edges,
-      (_, { data: weight }) => weight,
-      () => 10,
-      ({ target }) => target
-    )
-  );
+  const nodeA = new GraphNodeComponent([
+    { target: nodeB, data: 5 },
+    { target: nodeD, data: 1 },
+  ]);
 
   /*
        0     1      2      3       4      5     6
@@ -74,19 +61,18 @@ function createSimulation() {
     new PositionComponent(1, 1)
   );
   const entityB = entityManager.addEntity(nodeB, new PositionComponent(1, 3));
-  const entityC = entityManager.addEntity(nodeC, new StoreComponent(), new PositionComponent(5, 4));
+  const entityC = entityManager.addEntity(
+    nodeC,
+    new ConsumerComponent(),
+    new StoreComponent(),
+    new PositionComponent(5, 4)
+  );
   const entityD = entityManager.addEntity(nodeD, new PositionComponent(4, 2));
 
   entityManager.addEntity(
     new WalkerComponent({
-      type: 'Moving',
-      path: [
-        entityManager.getEntityWithComponents(entityC, 'Position', 'GraphNode')!,
-        entityManager.getEntityWithComponents(entityB, 'Position', 'GraphNode')!,
-        entityManager.getEntityWithComponents(entityA, 'Position', 'GraphNode')!,
-      ],
-      currentPathSegment: 0,
-      segmentProgress: 0,
+      type: 'Idle',
+      location: entityManager.getEntityWithComponents(entityC, 'GraphNode')!.GraphNode,
     })
   );
 

@@ -30,7 +30,13 @@ const ReactRenderer: React.FC<ReactRenderingProps> = ({ entityManager }) => {
           </g>
         ))}
         {walkers.map(([id, components]) => (
-          <Walker key={id} state={components.Walker.state} cellSize={CELL_SIZE} onClick={() => selectEntityId(id)} />
+          <Walker
+            key={id}
+            state={components.Walker.state}
+            cellSize={CELL_SIZE}
+            entityManager={entityManager}
+            onClick={() => selectEntityId(id)}
+          />
         ))}
       </Grid>
       {selectedEntityId && (
