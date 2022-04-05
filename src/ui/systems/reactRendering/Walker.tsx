@@ -48,12 +48,12 @@ const Walker: React.FC<WalkerProps> = ({ state, cellSize, onClick, entityManager
     }
 
     case 'Moving': {
-      const segmentStart = entityManager.getEntityWithComponents(
-        state.path[state.currentPathSegment].entityId,
-        'Position'
-      );
+      const segmentStart =
+        state.currentPathSegment === 0
+          ? entityManager.getEntityWithComponents(state.start.entityId, 'Position')
+          : entityManager.getEntityWithComponents(state.path[state.currentPathSegment - 1].target.entityId, 'Position');
       const segmentEnd = entityManager.getEntityWithComponents(
-        state.path[state.currentPathSegment + 1].entityId,
+        state.path[state.currentPathSegment].target.entityId,
         'Position'
       );
 

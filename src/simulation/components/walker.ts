@@ -4,7 +4,7 @@ import GraphNodeComponent from './graphNode';
 export default class WalkerComponent extends Component<typeof WalkerComponent.TypeTag> {
   static TypeTag = 'Walker' as const;
 
-  constructor(public state: WalkerState, readonly velocity = 0.2) {
+  constructor(public state: WalkerState, readonly speed = 1) {
     super(WalkerComponent.TypeTag);
   }
 }
@@ -19,10 +19,12 @@ type Idle = {
 type Moving = {
   type: 'Moving';
 
+  start: GraphNodeComponent;
+
   /**
    * Ids of all entities on the way to the target
    */
-  path: ReadonlyArray<GraphNodeComponent>;
+  path: ReadonlyArray<GraphNodeComponent['edges'][0]>;
 
   /**
    * Index of the current path segment in `path`.
