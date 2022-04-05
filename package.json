@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "browser-sync start --server build --files build",
-    "build": "esbuild src/ui/index.ts --bundle --outfile=build/js/index.js",
+    "build": "esbuild src/ui/index.ts --bundle --sourcemap --outfile=build/js/index.js",
     "test": "jest"
   },
   "devDependencies": {
