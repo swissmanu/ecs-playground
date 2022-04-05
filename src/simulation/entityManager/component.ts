@@ -1,7 +1,7 @@
 import { TypeTagToComponent } from './typeTagToComponent';
 
 export default class Component<TypeTag extends keyof TypeTagToComponent> {
-  private _entityId: string = '';
+  private _entityId = '';
 
   constructor(readonly typeTag: TypeTag) {}
 

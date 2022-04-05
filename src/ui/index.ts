@@ -1,4 +1,3 @@
-import findPath from '../algorithm/graph/astar';
 import ConsumerComponent from '../simulation/components/consumer';
 import GraphNodeComponent from '../simulation/components/graphNode';
 import PositionComponent from '../simulation/components/position';
@@ -18,7 +17,7 @@ function createSimulation() {
   const nodeC = new GraphNodeComponent();
   const nodeB = new GraphNodeComponent([
     { target: nodeC, data: 2 },
-    { target: nodeD, data: 1 },
+    { target: nodeD, data: 3 },
   ]);
   const nodeA = new GraphNodeComponent([
     { target: nodeB, data: 5 },
@@ -87,13 +86,28 @@ function createSimulation() {
 const ui = document.querySelector('#ui');
 
 if (ui) {
+  let handle: number | null = null;
+  const onSimulateOneTick = () => {
+    if (handle === null) {
+      systems.forEach((s) => s.update());
+    }
+  };
+
+  const onToggleSimulation = () => {
+    // Do this state as part of the entitymanager as well?
+    if (handle === null) {
+      handle = window.setInterval(() => {
+        systems.forEach((s) => s.update());
+      }, 750);
+    } else {
+      clearInterval(handle);
+      handle = null;
+    }
+  };
+
   const { entityManager, systems: simulationSystems } = createSimulation();
-  const reactRendering = new ReactRenderingSystem(entityManager, ui);
+  const reactRendering = new ReactRenderingSystem(entityManager, ui, onSimulateOneTick, onToggleSimulation);
   const systems = [...simulationSystems, reactRendering];
 
   reactRendering.update();
-  setInterval(() => {
-    console.log('Update...');
-    systems.forEach((s) => s.update());
-  }, 750);
 }
