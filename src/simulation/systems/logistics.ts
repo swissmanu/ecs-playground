@@ -48,7 +48,7 @@ export default class LogisticsSystem extends System {
       } else if (components.Walker.state.type === 'Moving') {
         if (components.Walker.state.segmentProgress < 1) {
           const edgeWeight = components.Walker.state.path[components.Walker.state.currentPathSegment].data;
-          const progressDiff = 1 / edgeWeight;
+          const progressDiff = (1 / edgeWeight) * components.Walker.speed;
           components.Walker.state.segmentProgress = Math.min(1, components.Walker.state.segmentProgress + progressDiff);
         } else if (components.Walker.state.segmentProgress >= 1) {
           if (components.Walker.state.currentPathSegment === components.Walker.state.path.length - 1) {
@@ -60,8 +60,8 @@ export default class LogisticsSystem extends System {
             components.Walker.state.currentPathSegment++;
 
             const edgeWeight = components.Walker.state.path[components.Walker.state.currentPathSegment].data;
-            const progressDiff = 1 / edgeWeight;
-            components.Walker.state.segmentProgress = progressDiff;
+            const progressDiff = (1 / edgeWeight) * components.Walker.speed;
+            components.Walker.state.segmentProgress = Math.min(1, progressDiff);
           }
         }
       } else if (components.Walker.state.type === 'Arrived') {

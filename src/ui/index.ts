@@ -69,10 +69,13 @@ function createSimulation() {
   const entityD = entityManager.addEntity(nodeD, new PositionComponent(4, 2));
 
   entityManager.addEntity(
-    new WalkerComponent({
-      type: 'Idle',
-      location: entityManager.getEntityWithComponents(entityC, 'GraphNode')!.GraphNode,
-    })
+    new WalkerComponent(
+      {
+        type: 'Idle',
+        location: entityManager.getEntityWithComponents(entityC, 'GraphNode')!.GraphNode,
+      },
+      2
+    )
   );
 
   const systems: ReadonlyArray<System> = [new LogisticsSystem(entityManager), new ProductionSystem(entityManager)];
